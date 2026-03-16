@@ -19,6 +19,19 @@ from .constants import (
 )
 
 
+C_MACRO_START = """
+#ifdef __cplusplus
+extern "C" {
+#endif
+""".splitlines()
+
+C_MACRO_END = """
+#ifdef __cplusplus
+}
+#endif
+""".splitlines()
+
+
 @dataclass
 class Symbol:
     name: str
@@ -231,7 +244,9 @@ class Preprocessor:
                     raise Exception(f"Failed to preprocess {asm_file}: {e}") from None
 
                 asm_files.append((asm_file, len(rodata_entries)))
+                out_lines += C_MACRO_START
                 out_lines += new_lines
+                out_lines += C_MACRO_END
             else:
                 out_lines.append(line)
 
